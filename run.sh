@@ -10,6 +10,9 @@ case "$COMMAND" in
     "an")
         flutter analyze
         ;;    
+    "kill")
+        sudo kill -9 $(sudo lsof -t -i:8080)
+        ;;
     --help)
         echo -e "./run.sh --> run local server\n"
         echo -e "./run.sh test --> run tests\n"
