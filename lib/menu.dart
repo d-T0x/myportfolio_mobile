@@ -8,9 +8,17 @@ class MyHomePage extends StatelessWidget {
   final String kelas = "PBP C";
 
   final List<ItemHomepage> items = [
-    ItemHomepage("Lihat Proyek", Icons.folder),
-    ItemHomepage("Tambah Proyek", Icons.add_circle),
-    ItemHomepage("Logout", Icons.logout),
+    ItemHomepage(
+      "Lihat Proyek",
+      Icons.folder,
+      Color.fromARGB(255, 163, 233, 205),
+    ),
+    ItemHomepage(
+      "Tambah Proyek",
+      Icons.add_circle,
+      Color.fromARGB(255, 244, 219, 165),
+    ),
+    ItemHomepage("Logout", Icons.logout, Color.fromARGB(255, 198, 174, 239)),
   ];
 
   @override
@@ -21,10 +29,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'MyPortfolio',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
@@ -84,7 +89,6 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
-
 class InfoCard extends StatelessWidget {
   // Kartu informasi yang menampilkan judul (title) dan isi (content).
   final String title;
@@ -104,10 +108,7 @@ class InfoCard extends StatelessWidget {
         // Menyusun teks title dan content secara vertikal.
         child: Column(
           children: [
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8.0),
             Text(content),
           ],
@@ -117,14 +118,13 @@ class InfoCard extends StatelessWidget {
   }
 }
 
-
 class ItemHomepage {
   final String name;
   final IconData icon;
+  final Color color;
 
-  ItemHomepage(this.name, this.icon);
+  ItemHomepage(this.name, this.icon, this.color);
 }
-
 
 class ItemCard extends StatelessWidget {
   final ItemHomepage item;
@@ -135,7 +135,7 @@ class ItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       // Menggunakan warna sekunder dari skema tema aplikasi.
-      color: Theme.of(context).colorScheme.secondary,
+      color: item.color,
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         // Aksi ketika kartu ditekan oleh pengguna.
@@ -144,7 +144,9 @@ class ItemCard extends StatelessWidget {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!"))
+              SnackBar(
+                content: Text("Kamu telah menekan tombol ${item.name}!"),
+              ),
             );
         },
         child: Container(
@@ -153,11 +155,7 @@ class ItemCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
+                Icon(item.icon, color: Colors.white, size: 30.0),
                 const Padding(padding: EdgeInsets.all(3)),
                 Text(
                   item.name,
