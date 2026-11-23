@@ -21,6 +21,11 @@ class MyHomePage extends StatelessWidget {
       Color.fromARGB(255, 244, 219, 165),
     ),
     ItemHomepage("Logout", Icons.logout, Color.fromARGB(255, 198, 174, 239)),
+    ItemHomepage(
+      "Tambah Pengalaman",
+      Icons.add_circle,
+      Color.fromARGB(255, 244, 165, 165),
+    ),
   ];
 
   @override
