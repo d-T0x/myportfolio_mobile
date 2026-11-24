@@ -27,6 +27,8 @@ class Project {
   final String createdAt;
   final String programs;
   final String link;
+  @JsonKey(defaultValue: '')
+  final String projectImageUrl;
 
   Map<String, dynamic> toJson() => _$ProjectToJson(this);
 }
