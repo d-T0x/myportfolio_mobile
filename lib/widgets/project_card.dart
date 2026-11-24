@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:myportofolio_mobile/screens/project_form.dart';
 import 'package:myportofolio_mobile/screens/experience_form.dart';
+import 'package:myportofolio_mobile/screens/project_list_screen.dart';
+import 'package:myportofolio_mobile/widgets/auth_guard.dart';
+import 'package:myportofolio_mobile/services/auth_state.dart';
+import 'package:provider/provider.dart';
 
 class ItemHomepage {
   final String name;
@@ -23,7 +27,7 @@ class ItemCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         // Aksi ketika kartu ditekan oleh pengguna.
-        onTap: () {
+        onTap: () async {
           // Memunculkan SnackBar ketika diklik
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
@@ -35,18 +39,53 @@ class ItemCard extends StatelessWidget {
 
           // Navigate ke halaman yang sesuai
           if (item.name == "Tambah Proyek") {
+            final ok = await ensureLoggedIn(context);
+            if (!ok || !context.mounted) return;
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const ProjectFormPage()),
+              MaterialPageRoute<void>(builder: (_) => const ProjectFormPage()),
             );
           }
           if (item.name == "Tambah Pengalaman") {
+            final ok = await ensureLoggedIn(context);
+            if (!ok || !context.mounted) return;
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => const ExperienceFormPage(),
+              MaterialPageRoute<void>(
+                builder: (_) => const ExperienceFormPage(),
               ),
             );
+            return;
+          }
+
+          if (item.name == 'Logout') {
+            final authState = context.read<AuthState>();
+            if (!authState.isLoggedIn) {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  const SnackBar(content: Text('You are not logged in.')),
+                );
+              return;
+            }
+            await authState.logout();
+            if (!context.mounted) return;
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                const SnackBar(content: Text('Successfully logged out.')),
+              );
+            return;
+          }
+
+          if (item.name == 'View Projects') {
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (_) => const ProjectListScreen(),
+              ),
+            );
+            return;
           }
         },
         child: Container(

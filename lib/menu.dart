@@ -11,21 +11,21 @@ class MyHomePage extends StatelessWidget {
 
   final List<ItemHomepage> items = [
     ItemHomepage(
-      "Lihat Proyek",
-      Icons.folder,
-      Color.fromARGB(255, 163, 233, 205),
-    ),
-    ItemHomepage(
       "Tambah Proyek",
       Icons.add_circle,
       Color.fromARGB(255, 244, 219, 165),
     ),
-    ItemHomepage("Logout", Icons.logout, Color.fromARGB(255, 198, 174, 239)),
     ItemHomepage(
       "Tambah Pengalaman",
       Icons.add_circle,
       Color.fromARGB(255, 244, 165, 165),
     ),
+    ItemHomepage(
+      "View Projects",
+      Icons.logout,
+      Color.fromARGB(255, 163, 233, 205),
+    ),
+    ItemHomepage("Logout", Icons.logout, Color.fromARGB(255, 198, 174, 239)),
   ];
 
   @override
