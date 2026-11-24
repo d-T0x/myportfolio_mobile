@@ -13,6 +13,7 @@ class Project {
     required this.createdAt,
     required this.programs,
     required this.link,
+    this.projectImageUrl = '',
   });
 
   factory Project.fromJson(Map<String, dynamic> json) =>
