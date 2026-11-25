@@ -1,13 +1,20 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:myportofolio_mobile/menu.dart';
 import 'package:myportofolio_mobile/screens/project_form.dart';
 import 'package:myportofolio_mobile/screens/experience_form.dart';
+import 'package:myportofolio_mobile/screens/login_screen.dart';
+import 'package:myportofolio_mobile/screens/project_list_screen.dart';
+import 'package:myportofolio_mobile/widgets/auth_guard.dart';
+import 'package:myportofolio_mobile/services/auth_state.dart';
+import 'package:provider/provider.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isLoggedIn = context.watch<AuthState>().isLoggedIn;
+
     return Drawer(
       child: ListView(
         children: [
@@ -44,14 +51,29 @@ class LeftDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.work_outline),
+            title: const Text('Projects'),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (_) => const ProjectListScreen(),
+                ),
+              );
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.add_circle_outline),
             title: const Text('Add Project'),
             // Navigasi ke halaman tambah proyek
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProjectFormPage(),
+            onTap: () async {
+              final navigator = Navigator.of(context);
+              navigator.pop(); // Close drawer
+              final ok = await ensureLoggedIn(navigator.context);
+              if (!ok || !navigator.mounted) return;
+              navigator.push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const ProjectFormPage(),
                 ),
               );
             },
@@ -60,15 +82,45 @@ class LeftDrawer extends StatelessWidget {
             leading: const Icon(Icons.add_circle_outline),
             title: const Text('Add Experience'),
             // Navigasi ke halaman tambah pengalaman
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ExperienceFormPage(),
+            onTap: () async {
+              final navigator = Navigator.of(context);
+              navigator.pop(); // Close drawer
+              final ok = await ensureLoggedIn(navigator.context);
+              if (!ok || !navigator.mounted) return;
+              navigator.push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const ExperienceFormPage(),
                 ),
               );
             },
           ),
+          const Divider(),
+          if (!isLoggedIn)
+            ListTile(
+              leading: const Icon(Icons.login),
+              title: const Text('Login'),
+              onTap: () {
+                final navigator = Navigator.of(context);
+                navigator.pop();
+                navigator.push(
+                  MaterialPageRoute<bool>(builder: (_) => const LoginScreen()),
+                );
+              },
+            )
+          else
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () async {
+                final authState = context.read<AuthState>();
+                final messenger = ScaffoldMessenger.of(context);
+                Navigator.of(context).pop();
+                await authState.logout();
+                messenger.showSnackBar(
+                  const SnackBar(content: Text('Successfully logged out.')),
+                );
+              },
+            ),
         ],
       ),
     );
